@@ -10,3 +10,7 @@
 .nav-local-item:hover > *{
     color: black !important;
 }
+
+.login-heading{
+    color: #0ac !important;
+}
