@@ -14,3 +14,80 @@
 .login-heading{
     color: #0ac !important;
 }
+
+
+/* Timer CSS */
+
+/* general styling */
+:root {
+    --smaller: .75;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body > .container-local {
+    height: 100%;
+    margin: 0;
+}
+
+body > .container-local{
+    align-items: center;
+    display: flex;
+    font-family: -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Oxygen-Sans,
+        Ubuntu,
+        Cantarell,
+        "Helvetica Neue",
+        sans-serif;
+}
+
+.container-local {
+    color: #333;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 2rem;
+}
+
+#headline-local{
+    font-weight: normal;
+    letter-spacing: .125rem;
+    text-transform: uppercase;
+}
+
+.li-local{
+    display: inline-block;
+    font-size: 1.2em;
+    list-style-type: none;
+    padding: 1em;
+    text-transform: uppercase;
+}
+
+.li-local span {
+    display: block;
+    font-size: 2.3rem;
+    font-weight: 500;
+}
+
+@media all and (max-width: 768px) {
+    #headline-local {
+        font-size: calc(1.5rem * var(--smaller));
+    }
+
+    .li-local {
+        font-size: calc(1.125rem * var(--smaller));
+    }
+
+    .li-local span {
+        font-size: calc(3.375rem * var(--smaller));
+    }
+}
+
+/* End timer CSS */

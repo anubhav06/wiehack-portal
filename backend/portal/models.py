@@ -16,6 +16,7 @@ class Round(models.Model):
     active = models.BooleanField(default=False)
     # If this round is the next round, then True
     next_round = models.BooleanField(default=False)
+    end_time = models.DateTimeField()
 
     def __str__(self):
         return f"Round: {self.round_number} ---- Active: {self.active}"
