@@ -63,7 +63,7 @@
                 </ul>
                 <!-- Divider -->
                 <hr class="navbar-divider my-5 opacity-20">
-                
+
                 <!-- Push content down -->
                 <div class="mt-auto"></div>
                 <!-- User (md) -->
@@ -84,50 +84,82 @@
     </nav>
     <!-- Main content -->
     <div class="h-screen flex-grow-1 overflow-y-lg-auto gradient-bottom-right start-cyan-200 end-red-200">
-            <div class="container-fluid px-20 py-20">
-                <div class="row align-items-left">
-                    <div class="col ">
-                        <img class="h-md-24" src="{% static 'portal/img/wiehacklogo3.png' %}" alt="...">
-                    </div>
-                    <div class="col-10">
-                        <div class="mt-0 text-black ms-n12 font-semibold">
-                            <h1 class="h2 ps-0"> WIE HACK 4.0 </h1>
-                            36 hours international women centric <br/>
-                            hybrid (in-person + virtual) hackathon!
-                        </div>
+        <div class="container-fluid px-20 py-20">
+            <div class="row align-items-left">
+                <div class="col ">
+                    <img class="h-md-24" src="{% static 'portal/img/wiehacklogo3.png' %}" alt="...">
+                </div>
+                <div class="col-10">
+                    <div class="mt-0 text-black ms-n12 font-semibold">
+                        <h1 class="h2 ps-0"> WIE HACK 4.0 </h1>
+                        36 hours international women centric <br />
+                        hybrid (in-person + virtual) hackathon!
                     </div>
                 </div>
-                
             </div>
+
+        </div>
         <!-- Main -->
-            <div class="container-fluid">
-                <!-- Card stats -->
-                <div class="card shadow border-0 mb-7">
-                    {% if round %}
-                    <div class="card-header">
-                        <h5 class="h4 mb-0">Round - {{round.round_number}} </h5>
-                    </div>
-                    <div class="px-6 py-5 text-black">
-                        {{round.round_description}}
-                    </div>
-                    <div class="card-footer border-0 py-5">
-                        <a class="text-muted text-sm" href="{{round.download_template}}"> Download Template </a>
-                    </div>
-                    {% else %}
-                    <div class="card-header">
-                        <h5 class="h4 mb-0"> Round {{last_open_round}} is over! </h5>
-                    </div>
-                    <div class="px-6 py-5 text-black">
-                        Hang tight! The results of this round will be declared soon.
-                    </div>
-                    <div class="card-footer border-0 py-5">
-                        <span class="text-muted text-sm"> Need help? Contact us on Discord for immediate support. </span>
-                    </div>
-                    {% endif %}
-                </div>
+        <div class="container-fluid">
+            {% if round %}
+            <div class="px-18 pe-40">
+                <h1 class="h2 mb-5" >Round- {{round.round_number}} : Submission form</h1>
+                
+                {% if submission_form %}
+                    <p> We have receieved your response. <br/>
+                        Take some rest, till this round ends.
+                    </p>
+                {% else %}
+                    <!-- Submission Form -->
+                    <form action="{% url 'submission' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="mt-4">
+                            <label class="form-label" for="formInputExample"> Team ID </label>
+                            <input type="text" class="form-control" name="teamID" readonly value="{{user.username}}" required> 
+                        </div>
+                        {% if form.github %}
+                        <div class="mt-4">
+                            <label class="form-label" for="formInputExample"> GitHub </label>
+                            <input type="url" class="form-control" name="github" placeholder="GitHub repo link" required>
+                            <span class="d-block mt-2 text-sm text-muted">Make sure that your GitHub repository is public.</span>
+                        </div>
+                        {% endif %}
+                        {% if form.youtube %}
+                        <div class="mt-4">
+                            <label class="form-label" for="formInputExample"> YouTube </label>
+                            <input type="url" class="form-control" name="youtube" placeholder="YouTube video link">
+                            <span class="d-block mt-2 text-sm text-muted">Make sure that your YouTube video is Public/Unlisted.</span>
+                        </div>
+                        {% endif %}
+                        {% if form.file %}
+                        <div class="mt-4">
+                            <label class="form-label" for="input_file">Presentation</label>
+                            <input type="file" class="form-control" name="input_file" placeholder="Your presentation" required>
+                            <span class="d-block mt-2 text-sm text-muted">Accepted format: .pptx</span>
+                        </div>
+                        {% endif %}
+                        {% if message %}
+                        <div class="mb-4 font-semibold">{{ message }}</div>
+                        {% endif %}
+                        <div class="mt-4 mb-12">
+                            <input class="btn btn-primary w-full bg-cyan-600" type="submit" value="Submit" />
+                        </div>
+                    </form>
+                {% endif %}
             </div>
+            {% else %}
+            <div class="px-18 pe-40 ">
+                Round {{last_open_round.round_number}} submissions closed. <br/>
+                {% if submission_form %}
+                    We have receieved your submission <br/>
+                {% else %}
+                    NOTE: We have <strong>NOT</strong> receieved your submission. <br/>
+                {% endif %}
+                    Hang tight, while we declare the results of this round.
+            </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 
 {% endblock %}
-
