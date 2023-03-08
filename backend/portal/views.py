@@ -97,13 +97,27 @@ def submission(request):
 
     current_round = Round.objects.filter(active=True).first()
     form_requirements = FormRequirements.objects.filter(round=current_round).first()
+    
+    # If there is no active round, then find the next round which is going to be active.
+    next_round = Round.objects.filter(next_round=True).first()
+    if next_round is None:
+        total_rounds = Round.objects.all().count()
+        last_round = total_rounds
+    else:
+        last_round = Round.objects.get(round_number=next_round.round_number-1)
+
+    if current_round is None:
+        submission_form = SubmissionForm.objects.filter(team=request.user, round=last_round)
+    else:
+        submission_form = SubmissionForm.objects.filter(team=request.user, round=current_round)
+
 
     if request.method == "POST":
 
         username = request.POST.get("teamID", False)
         github = request.POST.get("github", False)
         youtube = request.POST.get("youtube", False)
-        file = request.POST.get("input_file", False)
+        file = request.FILES.get("input_file", False)
 
         # Input Validation
         if form_requirements.github and (not github):
@@ -147,19 +161,6 @@ def submission(request):
 
     # GET Method ----
  
-    # If there is no active round, then find the next round which is going to be active.
-    next_round = Round.objects.filter(next_round=True).first()
-    if next_round is None:
-        total_rounds = Round.objects.all().count()
-        last_round = total_rounds
-    else:
-        last_round = Round.objects.get(round_number=next_round.round_number-1)
-
-    if current_round is None:
-        submission_form = SubmissionForm.objects.filter(team=request.user, round=last_round)
-    else:
-        submission_form = SubmissionForm.objects.filter(team=request.user, round=current_round)
-
     return render(request, "portal/submission.html", {
         "form" : form_requirements,
         "round" : current_round,

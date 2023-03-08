@@ -26,7 +26,7 @@ class SubmissionForm(models.Model):
 
     github = models.CharField(max_length=100, blank=True)
     youtube = models.CharField(max_length=100, blank=True)
-    file = models.FileField(upload_to='uploads', blank=True)
+    file = models.FileField(max_length=5000, blank=True)
     team =  models.ForeignKey(User, related_name="team_submission", on_delete=models.CASCADE)
     round = models.ForeignKey(Round, related_name="round_submission", on_delete=models.CASCADE)
 
