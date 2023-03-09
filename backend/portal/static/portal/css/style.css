@@ -91,3 +91,17 @@ body > .container-local{
 }
 
 /* End timer CSS */
+
+
+/* Do not display content on small screen. Show a message to load on a bigger screen */
+@media screen and (max-width: 1300px) {
+    body{
+        background-color: black !important;
+    }
+    #top-local{
+        display: none !important;
+    }
+    #top-local-mobile{
+        display: block !important;
+    }
+}

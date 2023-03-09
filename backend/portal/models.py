@@ -30,6 +30,7 @@ class SubmissionForm(models.Model):
     file = models.FileField(max_length=5000, blank=True)
     team =  models.ForeignKey(User, related_name="team_submission", on_delete=models.CASCADE)
     round = models.ForeignKey(Round, related_name="round_submission", on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Round: {self.round.round_number} ---- Team: {self.team.username}"

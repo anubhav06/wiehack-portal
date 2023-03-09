@@ -3,14 +3,14 @@
 
 {% block body %}
 
-<div class="px-5 py-5 p-lg-0 bg-surface-secondary">
+<div class="px-5 py-5 p-lg-0 bg-surface-secondary" id="top-local">
     <div class="d-flex justify-content-center bg-purple-100">
         <div
             class="col-lg-5 col-xl-4 p-12 p-xl-20 position-fixed start-0 top-0 h-screen overflow-y-hidden d-none d-lg-flex flex-column gradient bg-black">
             <!-- Logo -->
             <a class="d-block" href="#">
                 <img src="{% static 'portal/img/bvpieee_logo_white.png' %}" class="h-32" alt="bvpieee">
-                <img src="{% static 'portal/img/wiehacklogo3.png' %}" class="h-20 px-12" alt="wiehack">
+                <img src="{% static 'portal/img/wiehacklogo3.png' %}" class="h-20 pe-1 ps-12" alt="wiehack">
             </a>
             <!-- Title -->
             <div class="mt-24 mb-20">
@@ -72,5 +72,15 @@
     </div>
 </div>
 
+<div class="container-local mt-24 px-12" id="top-local-mobile" style="display: none;">
+    <a class="d-block" href="#">
+        <img src="{% static 'portal/img/bvpieee_logo_white.png' %}" class="h-32" alt="bvpieee">
+        <img src="{% static 'portal/img/wiehacklogo3.png' %}" class="h-20 px-12" alt="wiehack">
+    </a>
+    <h5 class="h2 my-10 text-white font-bolder"> WIE HACK 4.0 </h5>
+    <h2 id="headline-local" class="text-white">
+        Please login using a laptop/desktop
+    </h2>
+</div>
 
 {% endblock %}
