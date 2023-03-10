@@ -68,7 +68,7 @@
         </div>
     </nav>
     <!-- Main content -->
-    <div class="h-screen flex-grow-1 overflow-y-lg-auto gradient-bottom-right start-cyan-200 end-red-200">
+    <div class="h-screen flex-grow-1 overflow-y-lg-auto gradient-main-local">
             <div class="container-fluid px-20 py-20">
                 <div class="row align-items-left">
                     <div class="col ">
@@ -112,6 +112,7 @@
                 </div>
             </div>
             <div class="container-local">
+                {% if round.active %}
                 <h2 id="headline-local">Round ends in</h2>
                 <div id="countdown-local">
                     <ul>
@@ -121,6 +122,9 @@
                         <li class="li-local"><span id="seconds"></span>Seconds</li>
                     </ul>
                 </div>
+                {% else %}
+                <h2 id="headline-local">Round over!</h2>
+                {% endif %}
             </div>
     </div>
 </div>

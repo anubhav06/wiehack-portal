@@ -92,7 +92,7 @@ def register(request):
     
     return render(request, "portal/register.html")
 
-
+@login_required(login_url="/login")
 def submission(request):
 
     current_round = Round.objects.filter(active=True).first()
@@ -146,6 +146,13 @@ def submission(request):
         if submission_form:
             return HttpResponse("We have already receieved your response.\nNeed help? Reach us on discord for immediate help. ")
 
+        # Input file validation
+        if file:
+            if file.size > 5242880:
+                return HttpResponse("File size should be less than 5MB", status=406)
+            elif not file.content_type.endswith('.pptx'):
+                return HttpResponse("Invalid file format", status=406)
+        
         # Save the data
         try:
             submit_form = SubmissionForm.objects.create(github=github, youtube=youtube, file=file, team=request.user, round=current_round)

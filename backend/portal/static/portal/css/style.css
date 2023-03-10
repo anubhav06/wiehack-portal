@@ -105,3 +105,24 @@ body > .container-local{
         display: block !important;
     }
 }
+
+/* gradients bg animation */
+.gradient-main-local {
+    background: linear-gradient(-45deg, #ff85b4, #83deff);
+    background-size: 150% 150%;
+    animation: gradient-bg 15s ease infinite;
+}
+
+@keyframes gradient-bg {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}

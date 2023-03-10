@@ -83,7 +83,7 @@
         </div>
     </nav>
     <!-- Main content -->
-    <div class="h-screen flex-grow-1 overflow-y-lg-auto gradient-bottom-right start-cyan-200 end-red-200">
+    <div class="h-screen flex-grow-1 overflow-y-lg-auto gradient-main-local">
         <div class="container-fluid px-20 py-20">
             <div class="row align-items-left">
                 <div class="col ">
@@ -139,8 +139,14 @@
                                 {% if form.file %}
                                 <div class="mt-4">
                                     <label class="form-label" for="input_file">Presentation</label>
-                                    <input type="file" class="form-control" name="input_file" placeholder="Your presentation" required>
-                                    <span class="d-block mt-2 text-sm text-muted">Accepted format: .pptx</span>
+                                    <input 
+                                        type="file" accept=".pptx" class="form-control" id="file" 
+                                        name="input_file" placeholder="Your presentation" onchange="fileUpload()" required
+                                    >
+                                    <span class="d-block mt-2 text-sm text-muted">
+                                        Accepted format:  .pptx <br/>
+                                        Maximum file size: 5 MB
+                                    </span>
                                 </div>
                                 {% endif %}
                                 {% if message %}
