@@ -45,6 +45,11 @@ document.addEventListener('DOMContentLoaded', function () {
     
     const endTime = JSON.parse(document.getElementById("roundEndTime")?.textContent);
 
+    if (endTime == "") {
+        document.getElementById("headline-local").style.display = "none";
+        document.getElementById("countdown-local").style.display = "none";
+    }
+    
     const countDown = new Date(endTime).getTime();
     const x = setInterval(function () {
 

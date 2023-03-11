@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Round, FormRequirements, SubmissionForm
+from .models import User, Round, FormRequirements, SubmissionForm, UserSession
 from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.

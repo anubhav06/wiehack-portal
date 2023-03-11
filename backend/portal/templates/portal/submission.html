@@ -161,7 +161,8 @@
                     {% endif %}
                     
                 {% else %}
-
+                    
+                    {% if last_open_round %}
                     <div class="card-header">
                         <h3 class="h2 mb-0">Round {{last_open_round.round_number}} : Submissions closed </h3>
                     </div>
@@ -173,6 +174,15 @@
                         {% endif %}
                         Hang tight, while we declare the results of this round.
                     </div>
+                    {% else %}
+                    <div class="card-header">
+                        <h3 class="h2 mb-0">Round 1 hasn't started yet </h3>
+                    </div>
+                    <div class="px-6 pt-4 pb-5 ">
+                        Round 1 submission forms haven't opened yet <br/>
+                        Please wait for Round 1 to start. Refer to the timeline for more details.
+                    </div>
+                    {% endif %}
 
                 {% endif %}
             </div>

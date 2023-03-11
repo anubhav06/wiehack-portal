@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-
 class User(AbstractUser):
     
     def __str__(self):
@@ -14,8 +13,7 @@ class Round(models.Model):
     round_description = models.CharField(max_length=500, default="round description here")
     download_template = models.CharField(max_length=500, default="https://www.bvpieee.in")
     active = models.BooleanField(default=False)
-    # If this round is the next round, then True
-    next_round = models.BooleanField(default=False)
+    round_over = models.BooleanField(default=False)
     end_time = models.DateTimeField()
 
     def __str__(self):
@@ -46,3 +44,4 @@ class FormRequirements(models.Model):
     
     def __str__(self):
         return f"{self.round.round_number}"
+    

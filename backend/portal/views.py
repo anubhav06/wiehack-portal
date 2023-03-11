@@ -3,36 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .models import User, Round, SubmissionForm, FormRequirements
+from .models import User, Round, SubmissionForm, FormRequirements, UserSession, Session
 from django.db import IntegrityError
 
 # Create your views here.
-
-@login_required(login_url="/login")
-def index(request):
-
-    round = Round.objects.filter(active=True).first()
-    # If there is no active round, then find the next round which is going to be active.
-    if round is None:
-        next_round = Round.objects.filter(next_round=True).first()
-        if next_round is None:
-            total_rounds = Round.objects.all().count()
-
-    def last_open_round():
-        try:
-            if next_round is not None:
-                last_open_round = next_round.round_number - 1
-            else:
-                last_open_round = total_rounds
-        except NameError:
-            last_open_round = None
-        return last_open_round
-    
-    return render(request, "portal/dashboard.html", {
-        "round" : round,
-        "last_open_round" : last_open_round()
-    })
-
 
 def login_view(request):
     if request.method == "POST":
@@ -92,25 +66,30 @@ def register(request):
     
     return render(request, "portal/register.html")
 
+
+@login_required(login_url="/login")
+def index(request):
+
+    current_round = Round.objects.filter(active=True).first()
+    last_over_round = Round.objects.filter(round_over=True).order_by('-round_number').first()
+    
+    return render(request, "portal/dashboard.html", {
+        "round" : current_round,
+        "last_over_round" : last_over_round,
+    })
+
+
 @login_required(login_url="/login")
 def submission(request):
 
     current_round = Round.objects.filter(active=True).first()
+    last_over_round = Round.objects.filter(round_over=True).order_by('-round_number').first()
     form_requirements = FormRequirements.objects.filter(round=current_round).first()
     
-    # If there is no active round, then find the next round which is going to be active.
-    next_round = Round.objects.filter(next_round=True).first()
-    if next_round is None:
-        total_rounds = Round.objects.all().count()
-        last_round = total_rounds
-    else:
-        last_round = Round.objects.get(round_number=next_round.round_number-1)
-
     if current_round is None:
-        submission_form = SubmissionForm.objects.filter(team=request.user, round=last_round)
+        submission_form = SubmissionForm.objects.filter(team=request.user, round=last_over_round)
     else:
         submission_form = SubmissionForm.objects.filter(team=request.user, round=current_round)
-
 
     if request.method == "POST":
 
@@ -171,6 +150,6 @@ def submission(request):
     return render(request, "portal/submission.html", {
         "form" : form_requirements,
         "round" : current_round,
-        "last_open_round" : last_round,
+        "last_open_round" : last_over_round,
         "submission_form" : submission_form
     })
