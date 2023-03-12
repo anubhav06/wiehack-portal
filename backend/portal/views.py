@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import User, Round, SubmissionForm, FormRequirements
+from .models import Round, SubmissionForm, FormRequirements
 from django.db import IntegrityError
 import os
 
@@ -37,37 +37,37 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-def register(request):
-    if request.method == "POST":
-        username = request.POST["username"]
-        email = request.POST["email"]
+# def register(request):
+#     if request.method == "POST":
+#         username = request.POST["username"]
+#         email = request.POST["email"]
 
-        # Ensure password matches confirmation
-        password = request.POST["password"]
-        confirmation = request.POST["confirmation"]
-        if password != confirmation:
-            return render(request, "portal/register.html", {
-                "message": "Passwords must match."
-            })
+#         # Ensure password matches confirmation
+#         password = request.POST["password"]
+#         confirmation = request.POST["confirmation"]
+#         if password != confirmation:
+#             return render(request, "portal/register.html", {
+#                 "message": "Passwords must match."
+#             })
 
-        # Input validation
-        if not username or not email or not password or not confirmation:
-            return render(request, "portal/register.html", {
-                "message": "All fields required."
-            })
+#         # Input validation
+#         if not username or not email or not password or not confirmation:
+#             return render(request, "portal/register.html", {
+#                 "message": "All fields required."
+#             })
 
-        # Attempt to create new user
-        try:
-            user = User.objects.create_user(username, email, password)
-            user.save()
-        except IntegrityError:
-            return render(request, "portal/register.html", {
-                "message": "Username already taken."
-            })
-        login(request, user)
-        return HttpResponseRedirect(reverse("index"))
+#         # Attempt to create new user
+#         try:
+#             user = User.objects.create_user(username, email, password)
+#             user.save()
+#         except IntegrityError:
+#             return render(request, "portal/register.html", {
+#                 "message": "Username already taken."
+#             })
+#         login(request, user)
+#         return HttpResponseRedirect(reverse("index"))
     
-    return render(request, "portal/register.html")
+#     return render(request, "portal/register.html")
 
 
 @login_required(login_url="/login")
