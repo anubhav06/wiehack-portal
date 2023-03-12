@@ -47,7 +47,7 @@
                     </li>
                     <li class="nav-item nav-local-item">
                         <a class="nav-link text-white nav-local-item" href="/submission">
-                            <i class="bi bi-bar-chart text-white"></i> Submission
+                            <i class="bi bi-upload text-white"></i> Submission
                         </a>
                     </li>
                     <li class="nav-item nav-local-item">
@@ -102,88 +102,109 @@
         <!-- Main -->
         <div class="container-fluid px-16">
             <div class="card shadow border-0 mb-7 px-4">
-                {% if round %}
-                    <div class="card-header">
-                        <h3 class="h2 mb-0 font-semibold">Round- {{round.round_number}} : Submission form </h3>
-                    </div>
-
-                    {% if submission_form %}
-                        <div class="px-6 pt-4 pb-5"> 
-                            We have receieved your response. <br/>
-                            Take some rest, till this round ends.
+                {% if user_eligible %}
+                    {% if round %}
+                        <div class="card-header">
+                            <h3 class="h2 mb-0 font-semibold">Round- {{round.round_number}} : Submission form </h3>
                         </div>
+
+                        {% if submission_form %}
+                            <div class="px-6 pt-4 pb-5"> 
+                                We have receieved your response. <br/>
+                                Take some rest, till this round ends.
+                            </div>
+                        {% else %}
+
+                            <div class="px-6 pb-5">
+                                <!-- Submission Form -->
+                                <form action="{% url 'submission' %}" method="POST" enctype="multipart/form-data" onsubmit="formSubmit()">
+                                    {% csrf_token %}
+                                    <div class="mt-4">
+                                        <label class="form-label" for="formInputExample"> Team ID </label>
+                                        <input type="text" class="form-control" name="teamID" readonly value="{{user.username}}" required> 
+                                    </div>
+                                    {% if form.github %}
+                                    <div class="mt-4">
+                                        <label class="form-label" for="formInputExample"> GitHub </label>
+                                        <input type="url" class="form-control" name="github" placeholder="GitHub repo link" required>
+                                        <span class="d-block mt-2 text-sm text-muted">Make sure that your GitHub repository is public.</span>
+                                    </div>
+                                    {% endif %}
+                                    {% if form.youtube %}
+                                    <div class="mt-4">
+                                        <label class="form-label" for="formInputExample"> YouTube </label>
+                                        <input type="url" class="form-control" name="youtube" placeholder="YouTube video link">
+                                        <span class="d-block mt-2 text-sm text-muted">Make sure that your YouTube video is Public/Unlisted.</span>
+                                    </div>
+                                    {% endif %}
+                                    {% if form.file %}
+                                    <div class="mt-4">
+                                        <label class="form-label" for="input_file">Presentation</label>
+                                        <input 
+                                            type="file" accept=".pptx" class="form-control" id="file" 
+                                            name="input_file" placeholder="Your presentation" onchange="fileUpload()" required
+                                        >
+                                        <span class="d-block mt-2 text-sm text-muted">
+                                            Accepted format:  .pptx <br/>
+                                            Maximum file size: 5 MB
+                                        </span>
+                                    </div>
+                                    {% endif %}
+                                    {% if message %}
+                                    <div class="mb-4 font-semibold">{{ message }}</div>
+                                    {% endif %}
+                                    <div class="mt-6 mb-6">
+                                        <input class="btn btn-primary w-full bg-cyan-600" id="form-submit" type="submit" value="Submit" />
+                                    </div>
+                                </form>
+                            </div>
+
+                        {% endif %}
+                        
                     {% else %}
-
-                        <div class="px-6 pb-5">
-                            <!-- Submission Form -->
-                            <form action="{% url 'submission' %}" method="POST" enctype="multipart/form-data" onsubmit="formSubmit()">
-                                {% csrf_token %}
-                                <div class="mt-4">
-                                    <label class="form-label" for="formInputExample"> Team ID </label>
-                                    <input type="text" class="form-control" name="teamID" readonly value="{{user.username}}" required> 
-                                </div>
-                                {% if form.github %}
-                                <div class="mt-4">
-                                    <label class="form-label" for="formInputExample"> GitHub </label>
-                                    <input type="url" class="form-control" name="github" placeholder="GitHub repo link" required>
-                                    <span class="d-block mt-2 text-sm text-muted">Make sure that your GitHub repository is public.</span>
-                                </div>
-                                {% endif %}
-                                {% if form.youtube %}
-                                <div class="mt-4">
-                                    <label class="form-label" for="formInputExample"> YouTube </label>
-                                    <input type="url" class="form-control" name="youtube" placeholder="YouTube video link">
-                                    <span class="d-block mt-2 text-sm text-muted">Make sure that your YouTube video is Public/Unlisted.</span>
-                                </div>
-                                {% endif %}
-                                {% if form.file %}
-                                <div class="mt-4">
-                                    <label class="form-label" for="input_file">Presentation</label>
-                                    <input 
-                                        type="file" accept=".pptx" class="form-control" id="file" 
-                                        name="input_file" placeholder="Your presentation" onchange="fileUpload()" required
-                                    >
-                                    <span class="d-block mt-2 text-sm text-muted">
-                                        Accepted format:  .pptx <br/>
-                                        Maximum file size: 5 MB
-                                    </span>
-                                </div>
-                                {% endif %}
-                                {% if message %}
-                                <div class="mb-4 font-semibold">{{ message }}</div>
-                                {% endif %}
-                                <div class="mt-6 mb-6">
-                                    <input class="btn btn-primary w-full bg-cyan-600" id="form-submit" type="submit" value="Submit" />
-                                </div>
-                            </form>
+                        
+                        {% if last_open_round %}
+                        <div class="card-header">
+                            <h3 class="h2 mb-0">Round {{last_open_round.round_number}} : Submissions closed </h3>
                         </div>
+                        <div class="px-6 pt-4 pb-5 ">
+                            {% if submission_form %}
+                            We have receieved your submission <br />
+                            {% else %}
+                            NOTE: We have <strong>NOT</strong> receieved your submission. <br />
+                            {% endif %}
+                            Hang tight, while we declare the results of this round.
+                        </div>
+                        {% else %}
+                        <div class="card-header">
+                            <h3 class="h2 mb-0">Round 1 hasn't started yet </h3>
+                        </div>
+                        <div class="px-6 pt-4 pb-5 ">
+                            Round 1 submission forms haven't opened yet <br/>
+                            Please wait for Round 1 to start. Refer to the timeline for more details.
+                        </div>
+                        {% endif %}
 
                     {% endif %}
                     
                 {% else %}
-                    
                     {% if last_open_round %}
-                    <div class="card-header">
-                        <h3 class="h2 mb-0">Round {{last_open_round.round_number}} : Submissions closed </h3>
-                    </div>
-                    <div class="px-6 pt-4 pb-5 ">
-                        {% if submission_form %}
-                        We have receieved your submission <br />
-                        {% else %}
-                        NOTE: We have <strong>NOT</strong> receieved your submission. <br />
-                        {% endif %}
-                        Hang tight, while we declare the results of this round.
-                    </div>
+                        <div class="card-header">
+                            <h3 class="h2 mb-0"> Team not selected for this round </h3>
+                        </div>
+                        <div class="px-6 pt-4 pb-5 ">
+                            You are not selected for this round. <br />
+                            Please contact the organizers if you think this info is incorrect.
+                        </div>
                     {% else %}
-                    <div class="card-header">
-                        <h3 class="h2 mb-0">Round 1 hasn't started yet </h3>
-                    </div>
-                    <div class="px-6 pt-4 pb-5 ">
-                        Round 1 submission forms haven't opened yet <br/>
-                        Please wait for Round 1 to start. Refer to the timeline for more details.
-                    </div>
+                        <div class="card-header">
+                            <h3 class="h2 mb-0">Round 1 hasn't started yet </h3>
+                        </div>
+                        <div class="px-6 pt-4 pb-5 ">
+                            Round 1 submission forms haven't opened yet <br />
+                            Please wait for Round 1 to start. Refer to the timeline for more details.
+                        </div>
                     {% endif %}
-
                 {% endif %}
             </div>
         </div>

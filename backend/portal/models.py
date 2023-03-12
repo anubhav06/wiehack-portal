@@ -15,6 +15,7 @@ class Round(models.Model):
     active = models.BooleanField(default=False)
     round_over = models.BooleanField(default=False)
     end_time = models.DateTimeField()
+    eligible_teams = models.ManyToManyField(User)
 
     def __str__(self):
         return f"Round: {self.round_number} ---- Active: {self.active}"

@@ -32,7 +32,7 @@
                     </li>
                     <li class="nav-item nav-local-item">
                         <a class="nav-link text-white nav-local-item" href="/submission">
-                            <i class="bi bi-bar-chart text-white"></i> Submission
+                            <i class="bi bi-upload text-white"></i> Submission
                         </a>
                     </li>
                     <li class="nav-item nav-local-item">
@@ -40,11 +40,6 @@
                             <i class="bi bi-discord text-white"></i> Discord
                         </a>
                     </li>
-                    <!-- <li class="nav-item nav-local-item">
-                        <a class="nav-link text-white nav-local-item nav-local-item" href="/my-team">
-                            <i class="bi bi-people text-white"></i> My Team
-                        </a>
-                    </li> -->
                 </ul>
                 <!-- Divider -->
                 <hr class="navbar-divider my-5 opacity-20">
@@ -85,59 +80,89 @@
                 
             </div>
         <!-- Main -->
-            <div class="container-fluid">
-                <!-- Card stats -->
-                <div class="card shadow border-0 mb-7">
-                    {% if round %}
-                    <div class="card-header">
-                        <h5 class="h4 mb-0">Round - {{round.round_number}} </h5>
-                    </div>
-                    <div class="px-6 py-5 text-black">
-                        {{round.round_description}}
-                    </div>
-                    <div class="card-footer border-0 py-5">
-                        <a class="text-muted text-sm" href="{{round.download_template}}"> Download Template </a>
-                    </div>
-                    {% else %}
-                        {% if last_over_round %}
+            {% if user_eligible %}
+                <div class="container-fluid">
+                    <!-- Card stats -->
+                    <div class="card shadow border-0 mb-7">
+                        {% if round %}
                         <div class="card-header">
-                            <h5 class="h4 mb-0"> Round {{last_over_round.round_number}} is over! </h5>
+                            <h5 class="h4 mb-0">Round - {{round.round_number}} </h5>
                         </div>
                         <div class="px-6 py-5 text-black">
-                            Hang tight! The results of this round will be declared soon.
+                            {{round.round_description}}
                         </div>
                         <div class="card-footer border-0 py-5">
-                            <span class="text-muted text-sm"> Need help? Contact us on Discord for immediate support. </span>
+                            <a class="text-muted text-sm" href="{{round.download_template}}"> Download Template </a>
                         </div>
                         {% else %}
-                        <div class="card-header">
-                            <h5 class="h4 mb-0"> Round 1 hasn't started yet </h5>
-                        </div>
-                        <div class="px-6 py-5 text-black">
-                            Please wait for Round 1 to start. Refer to the timeline for more details.
-                        </div>
-                        <div class="card-footer border-0 py-5">
-                            <span class="text-muted text-sm"> Need help? Contact us on Discord for immediate support. </span>
-                        </div>
+                            {% if last_over_round %}
+                            <div class="card-header">
+                                <h5 class="h4 mb-0"> Round {{last_over_round.round_number}} is over! </h5>
+                            </div>
+                            <div class="px-6 py-5 text-black">
+                                Hang tight! The results of this round will be declared soon.
+                            </div>
+                            <div class="card-footer border-0 py-5">
+                                <span class="text-muted text-sm"> Need help? Contact us on Discord for immediate support. </span>
+                            </div>
+                            {% else %}
+                            <div class="card-header">
+                                <h5 class="h4 mb-0"> Round 1 hasn't started yet </h5>
+                            </div>
+                            <div class="px-6 py-5 text-black">
+                                Please wait for Round 1 to start. Refer to the timeline for more details.
+                            </div>
+                            <div class="card-footer border-0 py-5">
+                                <span class="text-muted text-sm"> Need help? Contact us on Discord for immediate support. </span>
+                            </div>
+                            {% endif %}
                         {% endif %}
+                    </div>
+                </div>
+                <div class="container-local">
+                    {% if round.active %}
+                    <h2 id="headline-local">Round ends in</h2>
+                    <div id="countdown-local">
+                        <ul>
+                            <li class="li-local"><span id="days"></span>days</li>
+                            <li class="li-local"><span id="hours"></span>Hours</li>
+                            <li class="li-local"><span id="minutes"></span>Minutes</li>
+                            <li class="li-local"><span id="seconds"></span>Seconds</li>
+                        </ul>
+                    </div>
+                    {% else %}
+                    <h2 id="headline-local">Round over!</h2>
                     {% endif %}
                 </div>
-            </div>
-            <div class="container-local">
-                {% if round.active %}
-                <h2 id="headline-local">Round ends in</h2>
-                <div id="countdown-local">
-                    <ul>
-                        <li class="li-local"><span id="days"></span>days</li>
-                        <li class="li-local"><span id="hours"></span>Hours</li>
-                        <li class="li-local"><span id="minutes"></span>Minutes</li>
-                        <li class="li-local"><span id="seconds"></span>Seconds</li>
-                    </ul>
-                </div>
+            {% else %}
+                {% if last_over_round %}
+                    <div class="container-fluid">
+                        <div class="card shadow border-0 mb-7">
+                            <div class="card-header">
+                                <h5 class="h4 mb-0">Team not selected for this round </h5>
+                            </div>
+                            <div class="px-6 py-5 text-black">
+                                You are not selected for this round. <br />
+                                Please contact the organizers if you think this info is incorrect.
+                            </div>
+                        </div>
+                    </div>
                 {% else %}
-                <h2 id="headline-local">Round over!</h2>
+                    <div class="container-fluid">
+                        <div class="card shadow border-0 mb-7">
+                            <div class="card-header">
+                                <h5 class="h4 mb-0"> Round 1 hasn't started yet </h5>
+                            </div>
+                            <div class="px-6 py-5 text-black">
+                                Please wait for Round 1 to start. Refer to the timeline for more details.
+                            </div>
+                            <div class="card-footer border-0 py-5">
+                                <span class="text-muted text-sm"> Need help? Contact us on Discord for immediate support. </span>
+                            </div>
+                        </div>
+                    </div>
                 {% endif %}
-            </div>
+            {% endif %}
     </div>
 </div>
 

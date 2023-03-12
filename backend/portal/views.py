@@ -3,8 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .models import User, Round, SubmissionForm, FormRequirements, UserSession, Session
+from .models import User, Round, SubmissionForm, FormRequirements
 from django.db import IntegrityError
+import os
+from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
@@ -72,10 +74,15 @@ def index(request):
 
     current_round = Round.objects.filter(active=True).first()
     last_over_round = Round.objects.filter(round_over=True).order_by('-round_number').first()
-    
+    try:
+        user_eligible = current_round.eligible_teams.filter(username=request.user.username).first()
+    except AttributeError:
+        user_eligible = None
+
     return render(request, "portal/dashboard.html", {
         "round" : current_round,
         "last_over_round" : last_over_round,
+        "user_eligible" : user_eligible
     })
 
 
@@ -85,7 +92,11 @@ def submission(request):
     current_round = Round.objects.filter(active=True).first()
     last_over_round = Round.objects.filter(round_over=True).order_by('-round_number').first()
     form_requirements = FormRequirements.objects.filter(round=current_round).first()
-    
+    try:
+        user_eligible = current_round.eligible_teams.filter(username=request.user.username).first()
+    except AttributeError:
+        user_eligible = None
+
     if current_round is None:
         submission_form = SubmissionForm.objects.filter(team=request.user, round=last_over_round)
     else:
@@ -125,11 +136,16 @@ def submission(request):
         if submission_form:
             return HttpResponse("We have already receieved your response.\nNeed help? Reach us on discord for immediate help. ")
 
+        # Check if user is selected for this round
+        if not user_eligible:
+            return HttpResponse("You are not eligible for this Round")
+
         # Input file validation
         if file:
+            file_ext = os.path.splitext(file.name)[1]
             if file.size > 5242880:
                 return HttpResponse("File size should be less than 5MB", status=406)
-            elif not file.content_type.endswith('.pptx'):
+            elif file_ext.lower() not in ['.pptx']:
                 return HttpResponse("Invalid file format", status=406)
         
         # Save the data
@@ -146,10 +162,11 @@ def submission(request):
         return HttpResponseRedirect(reverse("submission"))
 
     # GET Method ----
- 
+
     return render(request, "portal/submission.html", {
         "form" : form_requirements,
         "round" : current_round,
         "last_open_round" : last_over_round,
-        "submission_form" : submission_form
+        "submission_form" : submission_form,
+        "user_eligible" : user_eligible
     })
