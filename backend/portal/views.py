@@ -2,11 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from .models import User, Round, SubmissionForm, FormRequirements
 from django.db import IntegrityError
 import os
-from django.core.exceptions import ObjectDoesNotExist
 
 # Create your views here.
 
@@ -22,6 +21,8 @@ def login_view(request):
         # Check if authentication successful
         if user is not None:
             login(request, user)
+            if user.groups.filter(name="Judge").exists():
+                return HttpResponseRedirect(reverse("judge_index"))
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "portal/login.html", {
@@ -169,4 +170,25 @@ def submission(request):
         "last_open_round" : last_over_round,
         "submission_form" : submission_form,
         "user_eligible" : user_eligible
+    })
+
+
+@login_required(login_url="/login")
+@user_passes_test(lambda u: u.groups.filter(name='Judge').exists())
+def judge_index(request):
+
+    if not request.user.groups.filter(name="Judge").exists():
+        return HttpResponse("You are not authorised")
+
+    current_round = Round.objects.filter(active=True).first()
+    last_over_round = Round.objects.filter(round_over=True).order_by('-round_number').first()
+    if current_round:
+        submission_forms = SubmissionForm.objects.filter(round=current_round).all()
+    else:
+        submission_forms = SubmissionForm.objects.filter(round=last_over_round).all()
+
+    return render(request, "portal/judge-dashboard.html", {
+        "round" : current_round,
+        "last_over_round" : last_over_round,
+        "submission_forms" : submission_forms,
     })

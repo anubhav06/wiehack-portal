@@ -1,0 +1,169 @@
+{% extends "portal/layout.html" %}
+{% load static %}
+
+
+{% block body %}
+
+<!-- Dashboard -->
+<div class="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary" id="top-local">
+    <!-- Vertical Navbar -->
+    <nav class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 navbar-light bg-black border-bottom border-bottom-lg-0 border-end-lg"
+        id="navbarVertical">
+        <div class="container-fluid">
+            <!-- Toggler -->
+            <button class="navbar-toggler ms-n2" type="button" data-bs-toggle="collapse"
+                data-bs-target="#sidebarCollapse" aria-controls="sidebarCollapse" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Brand -->
+            <a class="navbar-brand py-lg-2 mb-lg-5 px-lg-6 me-0" href="#">
+                <img class="h-md-32" src="{% static 'portal/img/bvpieee_logo_white.png' %}" alt="bvpieee">
+            </a>
+
+            <!-- Collapse -->
+            <div class="collapse navbar-collapse" id="sidebarCollapse">
+                <!-- Navigation -->
+                <ul class="navbar-nav">
+                    <li class="nav-item nav-local-item">
+                        <a class="nav-link text-white nav-local-item" href="/judge-dashboard">
+                            <i class="bi bi-house text-white"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item nav-local-item">
+                        <a class="nav-link text-white nav-local-item" href="/discord">
+                            <i class="bi bi-discord text-white"></i> Discord
+                        </a>
+                    </li>
+                </ul>
+                <!-- Divider -->
+                <hr class="navbar-divider my-5 opacity-20">
+
+                <!-- Push content down -->
+                <div class="mt-auto"></div>
+                <!-- User (md) -->
+                <ul class="navbar-nav">
+                    <li class="nav-item nav-local-item">
+                        <a class="nav-link text-white nav-local-item" href="/team-profile">
+                            <i class="bi bi bi-people text-white"></i> USER: {{user.username}}
+                        </a>
+                    </li>
+                    <li class="nav-item nav-local-item">
+                        <a class="nav-link text-white nav-local-item" href="{% url 'logout' %}">
+                            <i class="bi bi-box-arrow-left text-white"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Main content -->
+    <div class="h-screen flex-grow-1 overflow-y-lg-auto gradient-main-local">
+        <div class="container-fluid px-20 py-20">
+            <div class="row align-items-left">
+                <div class="col ">
+                    <img class="h-md-24" src="{% static 'portal/img/wiehacklogo3.png' %}" alt="...">
+                </div>
+                <div class="col-10">
+                    <div class="mt-0 text-black ms-n12 font-semibold">
+                        <h1 class="h2 ps-0 font-bolder"> WIE HACK 4.0 </h1>
+                        36 hours international women centric <br />
+                        hybrid (in-person + virtual) hackathon!
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- Main -->
+        <div class="container-fluid">
+            <!-- Card stats -->
+            <div class="card shadow border-0 mb-7">
+                {% if round %}
+                    <div class="card-header">
+                        <h5 class="h4 mb-0">Round- {{round.round_number}}: Submissions </h5>
+                    </div>
+                    <div class="px-6 py-5 text-black">
+                        ℹ️ Round {{round.round_number}} is currently active! Submissions are still being received.
+                    </div>
+                {% else %}
+                    {% if last_over_round %}
+                        <div class="card-header">
+                            <h5 class="h4 mb-0">Round- {{last_over_round.round_number}}: Submissions </h5>
+                        </div>
+                        <div class="px-6 py-5 text-black">
+                            ℹ️ Round {{last_over_round.round_number}} is over! These are the final submissions.
+                        </div>
+                    {% else %}
+                        <div class="card-header">
+                            <h5 class="h4 mb-0">Round 1 hasn't started yet </h5>
+                        </div>
+                        <div class="px-6 py-5 text-black">
+                            ℹ️ You will see the submissions in real time once the round starts.
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-nowrap">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Team ID</th>
+                                <th scope="col">T.L. Email</th>
+                                <th scope="col">GitHub</th>
+                                <th scope="col">YouTube</th>
+                                <th scope="col">PPT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for form_data in submission_forms %}
+                            <tr>
+                                <td data-label="teamID">
+                                    <p class="text-heading font-semibold">
+                                        {{form_data.team.username}}
+                                    </p>
+                                </td>
+                                <td data-label="email">
+                                    <span class="text-current"> {{form_data.team.email}} </span>
+                                </td>
+                                <td data-label="github">
+                                    <a class="text-current" href="{{form_data.github}}" target="_blank"> {{form_data.github}} </a>
+                                </td>
+                                <td data-label="youtube">
+                                    <a class="text-current" href="{{form_data.youtube}}" target="_blank"> {{form_data.youtube}} </a>
+                                </td>
+                                <td data-label="presentation">
+                                    <a class="text-current" href="https://do4m1h9wmt2kw.cloudfront.net/{{form_data.file}}"
+                                        target="_blank">
+                                        {{form_data.file}} </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-local mt-24 px-12" id="top-local-mobile" style="display: none;">
+    <a class="d-block" href="#">
+        <img src="{% static 'portal/img/bvpieee_logo_white.png' %}" class="h-32" alt="bvpieee">
+        <img src="{% static 'portal/img/wiehacklogo3.png' %}" class="h-20 px-12" alt="wiehack">
+    </a>
+    <h5 class="h2 my-10 text-white font-bolder"> WIE HACK 4.0 </h5>
+    <h2 id="headline-local" class="text-white">
+        Please login using a laptop/desktop
+    </h2>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+
+<!-- pass the end_time variable to the JS script -->
+{{ round.end_time|json_script:"roundEndTime" }}
+<script src="{% static 'portal/js/script.js' %}">
+</script>
+{% endblock %}
