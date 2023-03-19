@@ -62,6 +62,12 @@ body > .container-local{
     text-transform: uppercase;
 }
 
+#headline-local-mobile {
+    font-weight: normal;
+    letter-spacing: .125rem;
+    text-transform: uppercase;
+}
+
 .li-local{
     display: inline-block;
     font-size: 1.2em;
