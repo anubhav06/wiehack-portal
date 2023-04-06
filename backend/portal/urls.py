@@ -10,5 +10,7 @@ urlpatterns = [
 
     path('', views.index, name="index"),
     path("submission", views.submission, name="submission"),
-    path("judge-dashboard", views.judge_index, name="judge_index")
+
+    path("judge-dashboard", views.judge_index, name="judge_index"),
+    path("admin-dashboard", views.admin_index, name="admin_index")
 ]

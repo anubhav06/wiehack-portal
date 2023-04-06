@@ -3,9 +3,17 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Round, SubmissionForm, FormRequirements
+from .models import Round, SubmissionForm, FormRequirements, User
 from django.db import IntegrityError
 import os
+
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+from googleapiclient.errors import HttpError
+import secrets
+import string
+from decouple import config
+
 
 # Create your views here.
 
@@ -23,6 +31,8 @@ def login_view(request):
             login(request, user)
             if user.groups.filter(name="Judge").exists():
                 return HttpResponseRedirect(reverse("judge_index"))
+            elif user.groups.filter(name="Admin").exists():
+                return HttpResponseRedirect(reverse("admin_index"))
             return HttpResponseRedirect(reverse("index"))
         else:
             return render(request, "portal/login.html", {
@@ -37,41 +47,11 @@ def logout_view(request):
     return HttpResponseRedirect(reverse("index"))
 
 
-# def register(request):
-#     if request.method == "POST":
-#         username = request.POST["username"]
-#         email = request.POST["email"]
-
-#         # Ensure password matches confirmation
-#         password = request.POST["password"]
-#         confirmation = request.POST["confirmation"]
-#         if password != confirmation:
-#             return render(request, "portal/register.html", {
-#                 "message": "Passwords must match."
-#             })
-
-#         # Input validation
-#         if not username or not email or not password or not confirmation:
-#             return render(request, "portal/register.html", {
-#                 "message": "All fields required."
-#             })
-
-#         # Attempt to create new user
-#         try:
-#             user = User.objects.create_user(username, email, password)
-#             user.save()
-#         except IntegrityError:
-#             return render(request, "portal/register.html", {
-#                 "message": "Username already taken."
-#             })
-#         login(request, user)
-#         return HttpResponseRedirect(reverse("index"))
-    
-#     return render(request, "portal/register.html")
-
-
 @login_required(login_url="/login")
 def index(request):
+
+    if request.user.groups.filter(name="Judge").exists():
+        return HttpResponseRedirect(reverse("judge_index"))
 
     current_round = Round.objects.filter(active=True).first()
     last_over_round = Round.objects.filter(round_over=True).order_by('-round_number').first()
@@ -89,6 +69,9 @@ def index(request):
 
 @login_required(login_url="/login")
 def submission(request):
+
+    if request.user.groups.filter(name="Judge").exists():
+        return HttpResponseRedirect(reverse("judge_index"))
 
     current_round = Round.objects.filter(active=True).first()
     last_over_round = Round.objects.filter(round_over=True).order_by('-round_number').first()
@@ -192,3 +175,79 @@ def judge_index(request):
         "last_over_round" : last_over_round,
         "submission_forms" : submission_forms,
     })
+
+
+@login_required(login_url="/login")
+@user_passes_test(lambda u: u.groups.filter(name='Admin').exists())
+def admin_index(request):
+
+    if not request.user.groups.filter(name="Admin").exists():
+        return HttpResponse("You are not authorised")
+
+    if request.method == "POST":
+        print("Generating Credentials ... ")
+        message = generate_credentials()
+        return render(request, "portal/admin-dashboard.html", {
+            "message" : message
+        })
+
+    return render(request, "portal/admin-dashboard.html")
+
+
+def generate_credentials():
+    
+    credentials = {
+        "type": config('GOOGLE_AUTH_TYPE'),
+        "project_id": config('GOOGLE_AUTH_PROJECT_ID'),
+        "private_key_id": config('GOOGLE_AUTH_PRIVATE_KEY_ID'),
+        "private_key": config('GOOGLE_AUTH_PRIVATE_KEY').replace('\\n', '\n').replace('\\\\', '\\'),
+        "client_email": config('GOOGLE_AUTH_CLIENT_EMAIL'),
+        "client_id": config('GOOGLE_AUTH_CLIENT_ID'),
+        "auth_uri": config('GOOGLE_AUTH_AUTH_URI'),
+        "token_uri": config('GOOGLE_AUTH_TOKEN_URI'),
+        "auth_provider_x509_cert_url": config('GOOGLE_AUTH_AUTH_PROVIDER_X509_CERT_URL'),
+        "client_x509_cert_url": config('GOOGLE_AUTH_CLIENT_X509_CERT_URL'),
+    }
+
+    try:
+        client = gspread.service_account_from_dict(credentials)
+
+        sheet = client.open(config('SPREADSHEET_NAME')).sheet1
+        portal_sheet = client.open(config('SPREADSHEET_PORTAL_NAME')).sheet1
+
+        # Get all the values from the spreadsheet
+        data = sheet.get_all_values()
+
+        user_data = []
+        user_data.append(['Team Name', 'Player Name', 'Player Email', 'Password'])
+
+        teamID = data[1][0]
+
+        for index, row in enumerate(data):
+            # Pass the very first row as it is column headings
+            if index == 0:
+                continue
+
+            if row[0] != teamID:
+                teamID == row[0]
+
+            if row[2] == "team leader":
+                # Save the details
+                alphabet = string.ascii_letters + string.digits + string.punctuation
+                password = ''.join(secrets.choice(alphabet) for i in range(20))  # for a 20-character password
+
+                try:
+                    user = User.objects.create_user(username=row[4], email=row[4], password=password, first_name=row[3])
+                    user.save()
+                except IntegrityError:
+                    return "Username already taken"
+
+                user_data.append([row[1], row[3], row[4], password])
+
+        portal_sheet.update('A1', user_data)
+        print('Generated credentials ✅')
+        return "Generated credentials successfully"
+
+    except:
+        print("⚠️ An error occourred ")
+        return "An error occurred with Google Sheets API"
