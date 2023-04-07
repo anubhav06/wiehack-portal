@@ -7,6 +7,15 @@
 /* Bootstrap Icons */
 @import url("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.0/font/bootstrap-icons.min.css");
 
+@font-face {
+    font-family: 'Zaptron';
+    font-weight: normal;
+    font-style: normal;
+    src: url('../font/Zaptron-Regular.woff2') format('woff2'),
+        url('../font/Zaptron-Regular.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+        url('../font/Zaptron-Regular.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
+}
+
 .nav-local-item:hover > *{
     color: black !important;
 }
