@@ -185,15 +185,42 @@ def admin_index(request):
         return HttpResponse("You are not authorised")
 
     if request.method == "POST":
-        print("Generating Credentials ... ")
-        message = generate_credentials()
-        return render(request, "portal/admin-dashboard.html", {
-            "message" : message
-        })
+
+        request_type = request.POST.get("request_type", "None")
+
+        if request_type == "generate_credentials":
+            print("Generating Credentials ... ")
+            message = generate_credentials()
+            return render(request, "portal/admin-dashboard.html", {
+                "message" : message
+            })
+        
+        elif request_type == "update_round2":
+            print("Updating Round 2 access ... ")
+            message = update_selected_teams(2)
+            return render(request, "portal/admin-dashboard.html", {
+                "message" : message
+            })
+        
+        elif request_type == "update_round3":
+            print("Updating Round 3 access ... ")
+            message = update_selected_teams(3)
+            return render(request, "portal/admin-dashboard.html", {
+                "message" : message
+            })
+        
+        else:
+            print("Invalid Request")
+            return render(request, "portal/admin-dashboard.html", {
+                "message" : "Invalid Request"
+            })
+        
+            
 
     return render(request, "portal/admin-dashboard.html")
 
 
+# Helper functions
 def generate_credentials():
     
     credentials = {
@@ -247,6 +274,52 @@ def generate_credentials():
         portal_sheet.update('A1', user_data)
         print('Generated credentials ✅')
         return "Generated credentials successfully"
+
+    except:
+        print("⚠️ An error occourred ")
+        return "An error occurred with Google Sheets API"
+    
+
+def update_selected_teams(round_number):
+
+    credentials = {
+        "type": config('GOOGLE_AUTH_TYPE'),
+        "project_id": config('GOOGLE_AUTH_PROJECT_ID'),
+        "private_key_id": config('GOOGLE_AUTH_PRIVATE_KEY_ID'),
+        "private_key": config('GOOGLE_AUTH_PRIVATE_KEY').replace('\\n', '\n').replace('\\\\', '\\'),
+        "client_email": config('GOOGLE_AUTH_CLIENT_EMAIL'),
+        "client_id": config('GOOGLE_AUTH_CLIENT_ID'),
+        "auth_uri": config('GOOGLE_AUTH_AUTH_URI'),
+        "token_uri": config('GOOGLE_AUTH_TOKEN_URI'),
+        "auth_provider_x509_cert_url": config('GOOGLE_AUTH_AUTH_PROVIDER_X509_CERT_URL'),
+        "client_x509_cert_url": config('GOOGLE_AUTH_CLIENT_X509_CERT_URL'),
+    }
+    
+    try:
+        client = gspread.service_account_from_dict(credentials)
+
+        grading_sheet = client.open(config('SPREADSHEET_GRADING_SHEET_NAME')).get_worksheet(round_number-1)
+
+        # Get all the values from the spreadsheet
+        data = grading_sheet.get_all_values()
+
+        for index, row in enumerate(data):
+            # Pass the very first row as it is column headings
+            if index == 0:
+                continue
+
+            if row[4].lower() == "selected":
+                tl_email = row[3]
+                try:
+                    tl = User.objects.get(email=tl_email)
+                except IntegrityError:
+                    return "Team leader not found"
+                
+                round = Round.objects.get(round_number=round_number)
+                round.eligible_teams.add(tl)
+        
+        print('Updated selected teams ✅')
+        return "Updated selected teams successfully"
 
     except:
         print("⚠️ An error occourred ")

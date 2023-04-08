@@ -80,8 +80,6 @@
                 <div class="card-header">
                     <h3 class="h2 mb-0 font-semibold">Generate Credentials </h3>
                 </div>
-            
-            
                 <div class="px-6 pb-5">
                     <!-- Submission Form -->
                     <form action="{% url 'admin_index' %}" method="POST" enctype="multipart/form-data">
@@ -94,11 +92,53 @@
                         {% if message %}
                         <div class="mb-4 font-semibold">{{ message }}</div>
                         {% endif %}
+                        <input type="text" class="form-control" name="request_type" hidden value="generate_credentials" required>
                         <div class="mt-6 mb-6">
                             <input class="btn btn-primary w-full bg-cyan-600" id="form-submit" type="submit" value="Generate" />
                         </div>
                     </form>
                 </div>            
+            </div>
+
+            <div class="card shadow border-0 mb-7 px-4">
+                <div class="card-header">
+                    <h3 class="h2 mb-0 font-semibold"> Update selected teams </h3>
+                </div>
+                <div class="px-6 pb-5">
+                    <!-- Submission Form -->
+                    <form action="{% url 'admin_index' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mt-4">
+                            <span class="d-block mt-2 text-sm text-muted">
+                                Updates the selected teams access of the portal for Round 2. <br/>
+                                These teams will be able to access the portal and submit their projects.
+                            </span>
+                        </div>
+                        {% if message %}
+                        <div class="mb-4 font-semibold">{{ message }}</div>
+                        {% endif %}
+                        <input type="text" class="form-control" name="request_type" hidden value="update_round2" required>
+                        <div class="mt-6 mb-6">
+                            <input class="btn btn-primary w-full bg-cyan-600" id="form-submit" type="submit" value="Round 2: Update Access" />
+                        </div>
+                    </form>
+                    <form action="{% url 'admin_index' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mt-4">
+                            <span class="d-block mt-2 text-sm text-muted">
+                                Updates the selected teams access of the portal for Round 3. <br/>
+                                These teams will be able to access the portal and submit their projects.
+                            </span>
+                        </div>
+                        {% if message %}
+                        <div class="mb-4 font-semibold">{{ message }}</div>
+                        {% endif %}
+                        <input type="text" class="form-control" name="request_type" hidden value="update_round3" required>
+                        <div class="mt-6 mb-6">
+                            <input class="btn btn-primary w-full bg-cyan-600" id="form-submit" type="submit" value="Round 3: Update Access" />
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
