@@ -252,7 +252,7 @@ def generate_credentials():
         data = sheet.get_all_values()
 
         user_data = []
-        user_data.append(['Team Name', 'Player Name', 'Player Email', 'Password'])
+        user_data.append(['TeamID', 'TL Name', 'TL Email', 'Password'])
 
         teamID = data[1][0]
 
@@ -270,12 +270,12 @@ def generate_credentials():
                 password = ''.join(secrets.choice(alphabet) for i in range(20))  # for a 20-character password
 
                 try:
-                    user = User.objects.create_user(username=row[4], email=row[4], password=password, first_name=row[3])
+                    user = User.objects.create_user(username=row[4], email=row[4], password=password, first_name=row[3], teamID=row[0])
                     user.save()
                 except IntegrityError:
                     return "Username already taken"
 
-                user_data.append([row[1], row[3], row[4], password])
+                user_data.append([row[0], row[3], row[4], password])
 
         portal_sheet.update('A1', user_data)
         print('Generated credentials ✅')
