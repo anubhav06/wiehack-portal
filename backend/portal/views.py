@@ -56,7 +56,10 @@ def index(request):
     current_round = Round.objects.filter(active=True).first()
     last_over_round = Round.objects.filter(round_over=True).order_by('-round_number').first()
     try:
-        user_eligible = current_round.eligible_teams.filter(username=request.user.username).first()
+        if current_round is None:
+            user_eligible = last_over_round.eligible_teams.filter(username=request.user.username).first()
+        else:
+            user_eligible = current_round.eligible_teams.filter(username=request.user.username).first()
     except AttributeError:
         user_eligible = None
 
@@ -77,7 +80,10 @@ def submission(request):
     last_over_round = Round.objects.filter(round_over=True).order_by('-round_number').first()
     form_requirements = FormRequirements.objects.filter(round=current_round).first()
     try:
-        user_eligible = current_round.eligible_teams.filter(username=request.user.username).first()
+        if current_round is None:
+            user_eligible = last_over_round.eligible_teams.filter(username=request.user.username).first()
+        else:
+            user_eligible = current_round.eligible_teams.filter(username=request.user.username).first()
     except AttributeError:
         user_eligible = None
 
