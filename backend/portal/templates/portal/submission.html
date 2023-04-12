@@ -120,7 +120,7 @@
                                 <form action="{% url 'submission' %}" method="POST" enctype="multipart/form-data" onsubmit="formSubmit()">
                                     {% csrf_token %}
                                     <div class="mt-4">
-                                        <label class="form-label" for="formInputExample"> Team ID </label>
+                                        <label class="form-label" for="formInputExample"> Team Leader Email </label>
                                         <input type="text" class="form-control" name="teamID" readonly value="{{user.username}}" required> 
                                     </div>
                                     {% if form.github %}
@@ -141,11 +141,11 @@
                                     <div class="mt-4">
                                         <label class="form-label" for="input_file">Presentation</label>
                                         <input 
-                                            type="file" accept=".pptx" class="form-control" id="file" 
+                                            type="file" accept=".pdf" class="form-control" id="file" 
                                             name="input_file" placeholder="Your presentation" onchange="fileUpload()" required
                                         >
                                         <span class="d-block mt-2 text-sm text-muted">
-                                            Accepted format:  .pptx <br/>
+                                            Accepted format:  .pdf <br/>
                                             Maximum file size: 5 MB
                                         </span>
                                     </div>

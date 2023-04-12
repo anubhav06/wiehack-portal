@@ -135,7 +135,7 @@ def submission(request):
             file_ext = os.path.splitext(file.name)[1]
             if file.size > 5242880:
                 return HttpResponse("File size should be less than 5MB", status=406)
-            elif file_ext.lower() not in ['.pptx']:
+            elif file_ext.lower() not in ['.pdf']:
                 return HttpResponse("Invalid file format", status=406)
         
         # Save the data

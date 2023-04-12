@@ -27,9 +27,9 @@ function fileUpload() {
             fi.value = "";
             alert("File size should be less than 5MB");
         }
-        else if (!hasExtension("file", [".pptx"])) {
+        else if (!hasExtension("file", [".pdf"])) {
             fi.value = "";
-            alert("Accepted format is .pptx only")
+            alert("Accepted format is .pdf only")
         }
     }
 
