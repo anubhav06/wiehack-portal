@@ -22,12 +22,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-u)w5-3&f_%)bwt@(q!=i-^+#w%@uh0juwxb-t^$xx%tnw%+cpv'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [config('ALLOWED_HOSTS')]
 
 
 # Application definition
@@ -130,7 +130,7 @@ AWS_S3_ADDRESSING_STYLE = "virtual"
 AWS_S3_REGION_NAME = "ap-south-1"
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 
-AWS_S3_CUSTOM_DOMAIN = 'do4m1h9wmt2kw.cloudfront.net'
+AWS_S3_CUSTOM_DOMAIN = config('AWS_S3_CUSTOM_DOMAIN')
 
 
 # Static files (CSS, JavaScript, Images)
