@@ -272,11 +272,11 @@ def generate_credentials():
                 try:
                     user = User.objects.create_user(username=row[4], email=row[4], password=password, first_name=row[3], teamID=row[0])
                     user.save()
-                except IntegrityError:
-                    return "Username already taken"
-
+                except Exception as e:
+                    return "Error: " + str(e) + " while creating user"
+                
                 user_data.append([row[0], row[3], row[4], password])
-        
+
         try:
             portal_sheet.update('A1', user_data)
         except:
