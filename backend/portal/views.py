@@ -276,8 +276,13 @@ def generate_credentials():
                     return "Username already taken"
 
                 user_data.append([row[0], row[3], row[4], password])
+        
+        try:
+            portal_sheet.update('A1', user_data)
+        except:
+            print("⚠️ Error while updating the spreadsheet")
+            return "Error while updating the spreadsheet"
 
-        portal_sheet.update('A1', user_data)
         print('Generated credentials ✅')
         return "Generated credentials successfully"
 
