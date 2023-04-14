@@ -286,9 +286,9 @@ def generate_credentials():
         print('Generated credentials ✅')
         return "Generated credentials successfully"
 
-    except:
-        print("⚠️ An error occourred ")
-        return "An error occurred with Google Sheets API"
+    except Exception as e:
+        print("⚠️ An error occourred : " + str(e) + " with Google Sheets API")
+        return "An error occurred with Google Sheets API: " + str(e) + ".Please try again later."
     
 
 def update_selected_teams(round_number):
