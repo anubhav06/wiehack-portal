@@ -91,6 +91,10 @@ body > .container-local{
     font-weight: 500;
 }
 
+.temp-mobile-login {
+    padding-right: 1rem !important;
+}
+
 @media all and (max-width: 768px) {
     #headline-local {
         font-size: calc(1.5rem * var(--smaller));
@@ -109,7 +113,7 @@ body > .container-local{
 
 
 /* Do not display content on small screen. Show a message to load on a bigger screen */
-@media screen and (max-width: 1300px) {
+@media screen and (max-width: 1239px) {
     body{
         background-color: black !important;
     }
