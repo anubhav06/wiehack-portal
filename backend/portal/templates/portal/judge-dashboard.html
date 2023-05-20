@@ -109,6 +109,7 @@
                             <tr>
                                 <th scope="col">Team ID</th>
                                 <th scope="col">T.L. Email</th>
+                                <th scope="col">Team Type</th>
                                 <th scope="col">GitHub</th>
                                 <th scope="col">YouTube</th>
                                 <th scope="col">PPT</th>
@@ -124,6 +125,11 @@
                                 </td>
                                 <td data-label="email">
                                     <span class="text-current"> {{form_data.team.email}} </span>
+                                </td>
+                                <td data-label="email">
+                                    <span class="text-current">
+                                        {{ form_data.team.team_type_offline|yesno:"Offline,Online" }}
+                                    </span>
                                 </td>
                                 <td data-label="github">
                                     <a class="text-current" href="{{form_data.github}}" target="_blank"> {{form_data.github}} </a>

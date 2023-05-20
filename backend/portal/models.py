@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     
     teamID = models.CharField(max_length=24, blank=True)
+    team_type_offline = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.username}"

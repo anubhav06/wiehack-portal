@@ -8,7 +8,7 @@ class MyUserAdmin(UserAdmin):
     model = User
 
     fieldsets = UserAdmin.fieldsets + (
-            (None, {'fields': ('teamID',)}),
+            (None, {'fields': ('teamID','team_type_offline')}),
     )
 
 # Register your models here.
