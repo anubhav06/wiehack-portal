@@ -50,3 +50,11 @@ class FormRequirements(models.Model):
     def __str__(self):
         return f"{self.round.round_number}"
     
+
+class GradingSheet(models.Model):
+
+    link = models.CharField(max_length=500, default="https://www.bvpieee.in")
+    user = models.ForeignKey(User, related_name="team_grading_sheet", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.link} ---- {self.user.username}"

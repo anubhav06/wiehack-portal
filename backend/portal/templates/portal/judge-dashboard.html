@@ -74,6 +74,14 @@
             </div>
 
         </div>
+        <div class="container-fluid">
+            <div class="card shadow border-0 mb-7">
+            <iframe width="100%" height="700"
+                src="{{grading_sheet}}"
+            ></iframe>
+            </div>
+        </div>
+
         <!-- Main -->
         <div class="container-fluid">
             <!-- Card stats -->
@@ -108,8 +116,8 @@
                         <thead class="table-light">
                             <tr>
                                 <th scope="col">Team ID</th>
+                                <th scope="col">Team Number</th>
                                 <th scope="col">T.L. Email</th>
-                                <th scope="col">Team Type</th>
                                 <th scope="col">GitHub</th>
                                 <th scope="col">YouTube</th>
                                 <th scope="col">PPT</th>
@@ -124,12 +132,10 @@
                                     </p>
                                 </td>
                                 <td data-label="email">
-                                    <span class="text-current"> {{form_data.team.email}} </span>
+                                    <span class="text-current"> {{form_data.team.team_number}} </span>
                                 </td>
                                 <td data-label="email">
-                                    <span class="text-current">
-                                        {{ form_data.team.team_type_offline|yesno:"Offline,Online" }}
-                                    </span>
+                                    <span class="text-current"> {{form_data.team.email}} </span>
                                 </td>
                                 <td data-label="github">
                                     <a class="text-current" href="{{form_data.github}}" target="_blank"> {{form_data.github}} </a>

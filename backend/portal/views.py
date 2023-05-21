@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import Round, SubmissionForm, FormRequirements, User
+from .models import Round, SubmissionForm, FormRequirements, User, GradingSheet
 from django.db import IntegrityError
 import os
 
@@ -176,10 +176,13 @@ def judge_index(request):
     else:
         submission_forms = SubmissionForm.objects.filter(round=last_over_round).all()
 
+    grading_sheet = GradingSheet.objects.filter(user=request.user).first()
+
     return render(request, "portal/judge-dashboard.html", {
         "round" : current_round,
         "last_over_round" : last_over_round,
         "submission_forms" : submission_forms,
+        "grading_sheet" :  grading_sheet
     })
 
 
