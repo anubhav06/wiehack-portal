@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     
     teamID = models.CharField(max_length=24, blank=True)
+    team_number = models.IntegerField()
     team_type_offline = models.BooleanField(default=False)
 
     def __str__(self):
@@ -35,7 +36,7 @@ class SubmissionForm(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Round: {self.round.round_number} ---- Team: {self.team.username}"
+        return f"Round: {self.round.round_number} ---- Team Number: {self.team.team_number}"
 
 
 # Equal to the number of rounds. Set a new requirement for each round
