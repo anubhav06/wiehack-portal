@@ -118,9 +118,10 @@
                                 <th scope="col">Team ID</th>
                                 <th scope="col">Team Number</th>
                                 <th scope="col">T.L. Email</th>
+                                <th scope="col">Theme</th>
+                                <th scope="col">PPT</th>
                                 <th scope="col">GitHub</th>
                                 <th scope="col">YouTube</th>
-                                <th scope="col">PPT</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -137,16 +138,19 @@
                                 <td data-label="email">
                                     <span class="text-current"> {{form_data.team.email}} </span>
                                 </td>
-                                <td data-label="github">
-                                    <a class="text-current" href="{{form_data.github}}" target="_blank"> {{form_data.github}} </a>
-                                </td>
-                                <td data-label="youtube">
-                                    <a class="text-current" href="{{form_data.youtube}}" target="_blank"> {{form_data.youtube}} </a>
+                                <td data-label="email">
+                                    <span class="text-current"> {{form_data.theme}} </span>
                                 </td>
                                 <td data-label="presentation">
                                     <a class="text-current" href="https://do4m1h9wmt2kw.cloudfront.net/{{form_data.file}}"
                                         target="_blank">
                                         {{form_data.file}} </a>
+                                </td>
+                                <td data-label="github">
+                                    <a class="text-current" href="{{form_data.github}}" target="_blank"> {{form_data.github}} </a>
+                                </td>
+                                <td data-label="youtube">
+                                    <a class="text-current" href="{{form_data.youtube}}" target="_blank"> {{form_data.youtube}} </a>
                                 </td>
                             </tr>
                             {% endfor %}

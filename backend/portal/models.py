@@ -34,6 +34,7 @@ class SubmissionForm(models.Model):
     team =  models.ForeignKey(User, related_name="team_submission", on_delete=models.CASCADE)
     round = models.ForeignKey(Round, related_name="round_submission", on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
+    theme = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
         return f"Round: {self.round.round_number} ---- Team Number: {self.team.team_number}"

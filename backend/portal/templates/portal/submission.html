@@ -132,6 +132,22 @@
                                         <label class="form-label" for="formInputExample"> Team Number </label>
                                         <input type="text" class="form-control" name="team_number" readonly value="{{user.team_number}}" required>
                                     </div>
+                                    <div class="mt-4">
+                                        <label class="form-label" for="formInputExample"> Theme/Track </label>
+                                        <select name="theme" class="form-control" id="form-label" required>
+                                            <option value="Health & Fitness">Health & Fitness</option>
+                                            <option value="Civil Securiy">Civil Securiy</option>
+                                            <option value="Open Innovation">Open Innovation</option>
+                                            <option value="Women Safety">Women Safety</option>
+                                            <option value="Fintech">Fintech</option>
+                                            <option value="Cyber Security">Cyber Security</option>
+                                            <option value="Blockchain">Blockchain</option>
+                                            <option value="Sponsor Track: Kryptoskatt">Sponsor Track: Kryptoskatt</option>
+                                            <option value="Sponsor Track: 5ire">Sponsor Track: 5ire</option>
+                                            <option value="Sponsor Track: We power">Sponsor Track: We power</option>
+                                            <option value="Sponsor Track: Postman">Sponsor Track: Postman</option>
+                                        </select>
+                                    </div>
                                     {% if form.github %}
                                     <div class="mt-4">
                                         <label class="form-label" for="formInputExample"> GitHub </label>

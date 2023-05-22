@@ -94,6 +94,7 @@ def submission(request):
 
     if request.method == "POST":
 
+        theme = request.POST.get("theme", False)
         username = request.POST.get("teamID", False)
         github = request.POST.get("github", False)
         youtube = request.POST.get("youtube", False)
@@ -140,7 +141,7 @@ def submission(request):
         
         # Save the data
         try:
-            submit_form = SubmissionForm.objects.create(github=github, youtube=youtube, file=file, team=request.user, round=current_round)
+            submit_form = SubmissionForm.objects.create(theme=theme, github=github, youtube=youtube, file=file, team=request.user, round=current_round)
             submit_form.save()
         except IntegrityError:
             return render(request, "portal/submission.html", {
