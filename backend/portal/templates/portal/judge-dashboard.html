@@ -115,6 +115,7 @@
                     <table class="table table-hover table-nowrap">
                         <thead class="table-light">
                             <tr>
+                                <th scope="col">S No.</th>
                                 <th scope="col">Team ID</th>
                                 <th scope="col">Team Number</th>
                                 <th scope="col">T.L. Email</th>
@@ -127,6 +128,11 @@
                         <tbody>
                             {% for form_data in submission_forms %}
                             <tr>
+                                <td data-label="teamID">
+                                    <p class="text-heading font-semibold">
+                                        {{form_data.id}}
+                                    </p>
+                                </td>
                                 <td data-label="teamID">
                                     <p class="text-heading font-semibold">
                                         {{form_data.team.teamID}}

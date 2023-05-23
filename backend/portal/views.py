@@ -173,9 +173,9 @@ def judge_index(request):
     current_round = Round.objects.filter(active=True).first()
     last_over_round = Round.objects.filter(round_over=True).order_by('-round_number').first()
     if current_round:
-        submission_forms = SubmissionForm.objects.filter(round=current_round).all()
+        submission_forms = SubmissionForm.objects.filter(round=current_round).all().order_by('id')
     else:
-        submission_forms = SubmissionForm.objects.filter(round=last_over_round).all()
+        submission_forms = SubmissionForm.objects.filter(round=last_over_round).all().order_by('id')
 
     grading_sheet = GradingSheet.objects.filter(user=request.user).first()
 
